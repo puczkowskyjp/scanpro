@@ -10,7 +10,7 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"powerwalk"
+	"github.com/puczkowskyjp/scanpro"
 )
 
 type multiFlag []string
@@ -55,12 +55,12 @@ func main() {
 		printUsageAndExit("at least one root is required via --root or positional args")
 	}
 
-	symlinkPolicy := powerwalk.SymlinkSkipDirs
+	symlinkPolicy := scanpro.SymlinkSkipDirs
 	if followSymlinks {
-		symlinkPolicy = powerwalk.SymlinkFollowDirs
+		symlinkPolicy = scanpro.SymlinkFollowDirs
 	}
 
-	opts := powerwalk.ScanOptions{
+	opts := scanpro.ScanOptions{
 		Roots:         roots,
 		MaxDepth:      maxDepth,
 		ExcludeNames:  excludeNames,
@@ -68,11 +68,11 @@ func main() {
 		SymlinkPolicy: symlinkPolicy,
 	}
 	if boundaryGit {
-		opts.BoundaryMode = powerwalk.BoundaryGitRoot
+		opts.BoundaryMode = scanpro.BoundaryGitRoot
 		opts.BoundaryGitIncludeNested = boundaryGitIncludeNested
 	}
 
-	result, err := powerwalk.Scan(context.Background(), opts)
+	result, err := scanpro.Scan(context.Background(), opts)
 	if err != nil {
 		if jsonOutput {
 			_ = writeJSON(debugOutput{
@@ -135,7 +135,7 @@ type summaryView struct {
 
 type debugOutput struct {
 	Options    optionsView          `json:"options"`
-	Result     powerwalk.ScanResult `json:"result,omitempty"`
+	Result     scanpro.ScanResult `json:"result,omitempty"`
 	Summary    summaryView          `json:"summary,omitempty"`
 	FatalError string               `json:"fatal_error,omitempty"`
 }
@@ -153,7 +153,7 @@ func printUsageAndExit(msg string) {
 	os.Exit(2)
 }
 
-func printTable(result powerwalk.ScanResult) {
+func printTable(result scanpro.ScanResult) {
 	w := tabwriter.NewWriter(os.Stdout, 2, 4, 2, ' ', 0)
 	_, _ = fmt.Fprintln(w, "PATH\tTYPES\tMATCHED_MARKERS\tROOT\tDEPTH")
 	for _, p := range result.Projects {
@@ -176,7 +176,7 @@ func printTable(result powerwalk.ScanResult) {
 	_ = w.Flush()
 }
 
-func buildSummary(result powerwalk.ScanResult) summaryView {
+func buildSummary(result scanpro.ScanResult) summaryView {
 	byType := map[string]int{}
 	for _, p := range result.Projects {
 		for _, m := range p.Matches {
@@ -190,7 +190,7 @@ func buildSummary(result powerwalk.ScanResult) summaryView {
 	}
 }
 
-func printSummary(result powerwalk.ScanResult) {
+func printSummary(result scanpro.ScanResult) {
 	s := buildSummary(result)
 	fmt.Println()
 	fmt.Printf("Projects discovered: %d\n", s.ProjectCount)

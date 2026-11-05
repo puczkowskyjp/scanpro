@@ -1,6 +1,6 @@
-# powerwalk
+# scanpro
 
-`powerwalk` is a Go library for discovering directories and classifying project types using filesystem markers.
+`scanpro` is a Go library for discovering directories and classifying project types using filesystem markers.
 
 It is intentionally application-agnostic: no CLI/TUI, no Git-specific coupling, no config-file parsing, and no tool execution.
 
@@ -25,15 +25,15 @@ It is intentionally application-agnostic: no CLI/TUI, no Git-specific coupling, 
 ## Public API
 
 ```go
-result, err := powerwalk.Scan(ctx, powerwalk.ScanOptions{
+result, err := scanpro.Scan(ctx, scanpro.ScanOptions{
     Roots: []string{`C:\dev`, `/home/me/src`},
     MaxDepth: 4, // 0 means unlimited (default), -1 also means unlimited
     ExcludeNames: []string{"node_modules", ".git"},
     ExcludePaths: []string{`C:\dev\archive`},
-    SymlinkPolicy: powerwalk.SymlinkSkipDirs,
-    BoundaryMode: powerwalk.BoundaryGitRoot, // optional: stop descending below dirs containing .git
+    SymlinkPolicy: scanpro.SymlinkSkipDirs,
+    BoundaryMode: scanpro.BoundaryGitRoot, // optional: stop descending below dirs containing .git
     BoundaryGitIncludeNested: true, // optional with BoundaryGitRoot: also return nested project rows
-    Detectors: append(powerwalk.BuiltinDetectors(), powerwalk.Detector{
+    Detectors: append(scanpro.BuiltinDetectors(), scanpro.Detector{
         TypeID:  "custom-tool",
         Markers: []string{"tool.yaml", "*.tool"},
     }),

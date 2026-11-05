@@ -1,4 +1,4 @@
-package powerwalk
+package scanpro
 
 import (
 	"context"
@@ -236,16 +236,16 @@ type normalizedOptions struct {
 
 func validateAndNormalizeOptions(opts ScanOptions) (normalizedOptions, error) {
 	if len(opts.Roots) == 0 {
-		return normalizedOptions{}, errors.New("powerwalk: at least one root is required")
+		return normalizedOptions{}, errors.New("scanpro: at least one root is required")
 	}
 	if opts.MaxDepth < -1 {
-		return normalizedOptions{}, fmt.Errorf("powerwalk: max depth must be -1 or >= 0, got %d", opts.MaxDepth)
+		return normalizedOptions{}, fmt.Errorf("scanpro: max depth must be -1 or >= 0, got %d", opts.MaxDepth)
 	}
 	if opts.SymlinkPolicy != SymlinkSkipDirs && opts.SymlinkPolicy != SymlinkFollowDirs {
-		return normalizedOptions{}, fmt.Errorf("powerwalk: unsupported symlink policy value %d", opts.SymlinkPolicy)
+		return normalizedOptions{}, fmt.Errorf("scanpro: unsupported symlink policy value %d", opts.SymlinkPolicy)
 	}
 	if opts.BoundaryMode != BoundaryNone && opts.BoundaryMode != BoundaryGitRoot {
-		return normalizedOptions{}, fmt.Errorf("powerwalk: unsupported boundary mode value %d", opts.BoundaryMode)
+		return normalizedOptions{}, fmt.Errorf("scanpro: unsupported boundary mode value %d", opts.BoundaryMode)
 	}
 
 	roots, err := normalizeAndDedupeRoots(opts.Roots)

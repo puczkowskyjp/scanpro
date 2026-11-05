@@ -1,4 +1,4 @@
-package powerwalk
+package scanpro
 
 import "sort"
 

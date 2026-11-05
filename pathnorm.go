@@ -1,4 +1,4 @@
-package powerwalk
+package scanpro
 
 import (
 	"fmt"
@@ -12,11 +12,11 @@ import (
 func normalizePath(path string) (string, error) {
 	trimmed := strings.TrimSpace(path)
 	if trimmed == "" {
-		return "", fmt.Errorf("powerwalk: empty path")
+		return "", fmt.Errorf("scanpro: empty path")
 	}
 	abs, err := filepath.Abs(trimmed)
 	if err != nil {
-		return "", fmt.Errorf("powerwalk: normalize path %q: %w", path, err)
+		return "", fmt.Errorf("scanpro: normalize path %q: %w", path, err)
 	}
 	return filepath.Clean(abs), nil
 }

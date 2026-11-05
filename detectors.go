@@ -1,4 +1,4 @@
-package powerwalk
+package scanpro
 
 import (
 	"fmt"
@@ -24,15 +24,15 @@ func normalizeDetectors(detectors []Detector) ([]Detector, error) {
 	for _, d := range detectors {
 		typeID := strings.TrimSpace(d.TypeID)
 		if typeID == "" {
-			return nil, fmt.Errorf("powerwalk: detector type id must not be empty")
+			return nil, fmt.Errorf("scanpro: detector type id must not be empty")
 		}
 		if _, ok := seenType[typeID]; ok {
-			return nil, fmt.Errorf("powerwalk: duplicate detector type id %q", typeID)
+			return nil, fmt.Errorf("scanpro: duplicate detector type id %q", typeID)
 		}
 		seenType[typeID] = struct{}{}
 
 		if len(d.Markers) == 0 {
-			return nil, fmt.Errorf("powerwalk: detector %q must define at least one marker", typeID)
+			return nil, fmt.Errorf("scanpro: detector %q must define at least one marker", typeID)
 		}
 
 		seenMarker := make(map[string]struct{}, len(d.Markers))
@@ -40,13 +40,13 @@ func normalizeDetectors(detectors []Detector) ([]Detector, error) {
 		for _, marker := range d.Markers {
 			marker = strings.TrimSpace(marker)
 			if marker == "" {
-				return nil, fmt.Errorf("powerwalk: detector %q has empty marker", typeID)
+				return nil, fmt.Errorf("scanpro: detector %q has empty marker", typeID)
 			}
 			if filepath.IsAbs(marker) {
-				return nil, fmt.Errorf("powerwalk: detector %q marker must be a file name or glob, got absolute path %q", typeID, marker)
+				return nil, fmt.Errorf("scanpro: detector %q marker must be a file name or glob, got absolute path %q", typeID, marker)
 			}
 			if strings.Contains(marker, string(filepath.Separator)) {
-				return nil, fmt.Errorf("powerwalk: detector %q marker must not include path separators: %q", typeID, marker)
+				return nil, fmt.Errorf("scanpro: detector %q marker must not include path separators: %q", typeID, marker)
 			}
 			if _, ok := seenMarker[marker]; ok {
 				continue
